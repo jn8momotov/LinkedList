@@ -5,8 +5,6 @@ public class ListLinked {
     private Post firstItem;
     private Post lastItem;
 
-    public ListLinked() {}
-
     void showAllList() {
         int index = 1;
         Post currentItem = firstItem;
@@ -19,30 +17,38 @@ public class ListLinked {
 
     void addBefore(String before, String value) {
         if (firstItem == null) {
-            firstItem = new Post(value, null);
+            firstItem = new Post(value);
             lastItem = firstItem;
             return;
         }
         Post currentItem = firstItem;
-        Post prevItem =  firstItem.getPrev();
-        while (currentItem != null) {
+        while (true) {
             if (currentItem.getValue().equals(before)) {
-                Post nextItem = currentItem.getNext();
-                Post newItem = new Post(value, nextItem, currentItem);
-                currentItem.setNext(newItem);
-                if (nextItem == null) {
-                    lastItem = newItem;
+
+                Post newItem = new Post(value);
+                if (currentItem.getPrev() == null) {
+                    firstItem = newItem;
+                    newItem.setNext(currentItem);
+                    currentItem.setPrev(newItem);
                     return;
                 }
-                nextItem.setPrev(newItem);
+                newItem.setPrev(currentItem.getPrev());
+                newItem.setNext(currentItem);
+                currentItem.getPrev().setNext(newItem);
+                currentItem.setPrev(newItem);
                 return;
             }
-            prevItem = currentItem;
+
+            if (currentItem.getNext() == null) {
+                Post newPost = new Post(value);
+                newPost.setPrev(currentItem);
+                currentItem.setNext(newPost);
+                lastItem = newPost;
+                return;
+            }
+
             currentItem = currentItem.getNext();
         }
-        Post newPost = new Post(value, prevItem);
-        prevItem.setNext(newPost);
-        lastItem = newPost;
     }
 
     void removeLast(String value) {
@@ -56,7 +62,10 @@ public class ListLinked {
                 Post nextItem = currentItem.getNext();
                 Post prevItem = currentItem.getPrev();
 
-                if (nextItem == null) {
+                if (prevItem == null && nextItem == null) {
+                    firstItem = null;
+                    lastItem = null;
+                } else if (nextItem == null) {
                     lastItem = prevItem;
                     prevItem.setNext(null);
                 } else if (prevItem == null) {

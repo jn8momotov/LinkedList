@@ -6,15 +6,8 @@ public class Post {
     private Post next;
     private Post prev;
 
-    public Post(String value, Post prev) {
+    public Post(String value) {
         this.value = value;
-        this.prev = prev;
-    }
-
-    public Post(String value, Post next, Post prev) {
-        this.value = value;
-        this.next = next;
-        this.prev = prev;
     }
 
 
@@ -38,7 +31,4 @@ public class Post {
         this.prev = prev;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
 }
